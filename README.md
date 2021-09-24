@@ -6,7 +6,7 @@ Rust-like error handling and options for TypeScript and Deno! This module allows
 
 The standard practice of returning `null` or `undefined` when no value other can be returned, leaves something to be desired. There is no way to tell where in the code said value came from. Rust's implementation of error handling (e.g. bubbling) also has many benefits that cannot be expressed in the normal `try` `catch` JS pattern.
 
-This module provides a minimal, fast and simple way to create expressive functions and pattern matching! 🚀
+This module provides a minimal, fast and simple way to create expressive functions and better pattern matching! 🚀
 
 ## Usage
 
