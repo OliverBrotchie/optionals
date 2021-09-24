@@ -259,7 +259,7 @@ mapOr(none, "foo", (val) => {
 
 ### isNone, isSome, isErr, isOkay
 
-Assets whether value is said symbol or specified type.
+Asserts whether value is said symbol or specified type.
 
 Example:
 
