@@ -1,4 +1,4 @@
-<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.rust-lang.org%2Fstatic%2Fimages%2Frust-social-wide.jpg&f=1&nofb=1" height="200" width="420" />
+<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.rust-lang.org%2Fstatic%2Fimages%2Frust-social-wide.jpg&f=1&nofb=1" height="200" width="400" />
 
 # Optionals&nbsp;&nbsp; 🦀
 
