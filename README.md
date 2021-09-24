@@ -1,3 +1,5 @@
+<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.rust-lang.org%2Fstatic%2Fimages%2Frust-social-wide.jpg&f=1&nofb=1" height="200" width="300" />
+
 # Optionals&nbsp;&nbsp; 🦀
 
 Rust-like error handling and options for TypeScript and Deno! This module allows you to remove Null and Undefined from your projects with the help of ES6 Symbols and helper functions. Inspired by Rust's `Option` and `Result`.
