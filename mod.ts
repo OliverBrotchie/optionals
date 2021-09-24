@@ -137,7 +137,7 @@ export function isSome(value: Option<unknown>): boolean {
  *
  * @param value Value that is either `Ok<T>` or an `Error`
  */
-export function isErr(value: Option<unknown>): boolean {
+export function isErr(value: Option<unknown>): value is typeof Err {
     return value === Err;
 }
 
