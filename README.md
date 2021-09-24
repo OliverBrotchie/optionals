@@ -2,12 +2,11 @@
 
 Rust-like error handling and options for TypeScript and Deno! This module allows you to remove Null and Undefined from your projects with the help of ES6 Symbols and helper functions. Inspired by Rust's `Option` and `Result`.
 
-## Why
+## Why should you use Optionals?
 
-Javascipt's implementation of returning Options (`null`/`undefined`) leaves something to be desired.
+Javascipt's implementation of returning Options (`null`/`undefined`) leaves something to be desired as there is no way to tell where the `null`/`undefinded` value is returned. Rust's implementation of error handling (e.g. bubbling) also has many benefits that cannot be expressed in the normal `try`/`catch` JS pattern.
 
-There is no way to tell where the `null` value is returned as it is equal to itself, and, it is also not what these values are designed for.
-Rust's implementation of Error handling (e.g. bubbling) also has many benefits that cannot be expressed in the normal `try`/`catch` JS pattern. ✨
+This module provides a minimal, fast and simple way to create expressive functions and pattern matching! 🚀
 
 ## Usage
 
