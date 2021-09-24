@@ -271,5 +271,5 @@ isNone(none); // True
 
 <br/> 
     
-**Thanks for reading, if you have any questions or wish to submit an improvment, 
-please open an [Issue](https://github.com/OliverBrotchie/optionals/issues/new)! ✨**
+**Thanks for reading! If you have any questions or wish to submit an improvment, 
+please open an [Issue](https://github.com/OliverBrotchie/optionals/issues/new). ✨**
