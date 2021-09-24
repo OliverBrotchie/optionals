@@ -6,7 +6,7 @@ Rust-like error handling and options for TypeScript and Deno! This module allows
 
 Javascipt's implementation of returning Options (`null`/`undefined`) leaves something to be desired. 
 
-There is no way to tell where the `null` or `undefinded` value is returned as it is equal to itself and it is also not what these values are designed for. 
+There is no way to tell where the `null` value is returned as it is equal to itself, and, it is also not what these values are designed for. 
 Rust's implementation of Error handling (e.g. bubbling) also has many benefits that cannot be expressed in the normal `try`/`catch` JS pattern. ✨
 
 ## Usage
