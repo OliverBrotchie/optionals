@@ -1,6 +1,6 @@
 # Optionals&nbsp;&nbsp; 🦀
 
-Rust-like error handling and options for TypeScript and Deno! This module allows you to remove Null and Undefined from your projects with the help of ES6 Symbols and helper functions and is Inspired by Rust's `Option` and `Result`.
+Rust-like error handling and options for TypeScript and Deno! This module allows you to remove Null and Undefined from your projects with the help of ES6 Symbols and helper functions. Inspired by Rust's `Option` and `Result`.
 
 ## Why
 
