@@ -269,4 +269,7 @@ const none: Option<number> = None;
 isNone(none); // True
 ```
 
-### Thanks for reading, if you have any questions or wish to submit an improvment, please open an [Issue](https://github.com/OliverBrotchie/optionals/issues/new)! ✨
+<br/> 
+    
+**Thanks for reading, if you have any questions or wish to submit an improvment, 
+please open an [Issue](https://github.com/OliverBrotchie/optionals/issues/new)! ✨**
