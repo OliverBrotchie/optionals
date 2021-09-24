@@ -1,9 +1,40 @@
-// deno-lint-ignore-file camelcase
+/**
+ * Optionals v1.0.2
+ */
 
 export const None = Symbol(`None`);
 export const Err = Symbol(`Error`);
-export type Option<T> = T | typeof None;
-export type Result<T> = T | typeof Err;
+export type OptionalGeneric<T> = T | symbol;
+export type Option<T> = OptionalGeneric<T>;
+export type Result<T> = OptionalGeneric<T>;
+
+/**
+ * A handler to take and match new symbols
+ */
+class SymbolHandler {
+    private values: Set<symbol>;
+    constructor() {
+        this.values = new Set([None, Err]);
+    }
+
+    /**
+     * Add a new symbol to match on
+     *
+     * @param s an instance of a symbol
+     */
+    add(s: symbol): void {
+        this.values.add(s);
+    }
+
+    /**
+     * Test if the SymbolHandler contains a symbol
+     */
+    contain(e: OptionalGeneric<unknown>): boolean {
+        return this.values.has(e as symbol);
+    }
+}
+
+export const Symbols = new SymbolHandler();
 
 /**
  * A generic function with one argument.
@@ -21,8 +52,8 @@ type NoArgFn<T> = () => T;
  *
  * @param value an `Option<T>` or `Result<T>`
  */
-export function unwrap(value: Option<unknown> | Result<unknown>): unknown {
-    if (value === None || value === Err) throw `unwrap call.`;
+export function unwrap(value: OptionalGeneric<unknown>): unknown {
+    if (Symbols.contain(value)) throw `unwrap on symbol.`;
     else return value;
 }
 
@@ -36,7 +67,7 @@ export function unwrapOr(
     value: Option<unknown> | Result<unknown>,
     fallback: unknown
 ): unknown {
-    return value === None || value === Err ? fallback : value;
+    return Symbols.contain(value) ? fallback : value;
 }
 
 /**
@@ -49,7 +80,7 @@ export function unwrapOrElse(
     value: Option<unknown> | Result<unknown>,
     fn: NoArgFn<unknown>
 ): unknown {
-    if (value === None || value === Err) return fn();
+    if (Symbols.contain(value)) return fn();
     else return value;
 }
 
@@ -63,7 +94,7 @@ export function map(
     value: Option<unknown> | Result<unknown>,
     fn: OneArgFn<unknown, unknown>
 ): Option<unknown> | Result<unknown> {
-    if (value === None || value === Err) return None;
+    if (Symbols.contain(value)) return None;
     else return fn(value);
 }
 
@@ -79,7 +110,7 @@ export function mapOr(
     fallback: unknown,
     fn: OneArgFn<unknown, unknown>
 ): unknown {
-    if (value === None || value === Err) return fallback;
+    if (Symbols.contain(value)) return fallback;
     else return fn(value);
 }
 
