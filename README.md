@@ -38,8 +38,8 @@ if (isOk(some)) {
     console.log(`Result: ${unwrap(ok)}`); // Unwrap returns the contained value if it is not an Err
 }
 
-// Deal with a None (logs 2)
-console.log(unwrapOr(none, 2));
+// Deal with a None
+console.log(unwrapOr(none, 2)); // 2
 ```
 
 Example usage of Result:
