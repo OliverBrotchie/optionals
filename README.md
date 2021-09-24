@@ -272,4 +272,4 @@ isNone(none); // True
 <br/> 
     
 **Thanks for reading! If you have any questions or wish to submit an improvment, 
-please open an [Issue](https://github.com/OliverBrotchie/optionals/issues/new). ✨**
+please open an [issue](https://github.com/OliverBrotchie/optionals/issues/new). ✨**
