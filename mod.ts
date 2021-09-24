@@ -2,8 +2,6 @@
 
 export const None = Symbol(`None`);
 export const Err = Symbol(`Error`);
-export type Some<T> = T;
-export type Ok<T> = T;
 export type Option<T> = T | typeof None;
 export type Result<T> = T | typeof Err;
 
@@ -34,7 +32,7 @@ export function unwrap(value: Option<unknown> | Result<unknown>): unknown {
  * @param value an `Option<T>` or `Result<T>`
  * @param fallback a fallback value of type `T`
  */
-export function unwrap_or(
+export function unwrapOr(
     value: Option<unknown> | Result<unknown>,
     fallback: unknown
 ): unknown {
@@ -47,7 +45,7 @@ export function unwrap_or(
  * @param valuean an `Option<T>` or `Result<T>`
  * @param fn
  */
-export function unwrap_or_else(
+export function unwrapOrElse(
     value: Option<unknown> | Result<unknown>,
     fn: NoArgFn<unknown>
 ): unknown {
@@ -76,7 +74,7 @@ export function map(
  * @param fallback a fallback value of type `T`
  * @param fn
  */
-export function map_or(
+export function mapOr(
     value: Option<unknown> | Result<unknown>,
     fallback: unknown,
     fn: OneArgFn<unknown, unknown>
