@@ -71,7 +71,7 @@ switch (val) {
 }
 ```
 
-If you wish to create custom Errors, it is simple enough to make a coppy and edit of `mod.ts` as it is less than 100 lines long! 🚀
+If you wish to create custom Errors, feel free to coppy and edit this module! 🚀
 
 ## Full API
 
