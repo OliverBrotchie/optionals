@@ -31,11 +31,11 @@ function divide(numerator: number, denominator: number): Option<number> {
 }
 
 // The return value of the function is an option
-const ok = divide(2, 3);
+const some = divide(2, 3);
 const none = divide(2, 0);
 
 // Pattern match to retrieve the value
-if (isOk(ok)) {
+if (isOk(some)) {
     console.log(`Result: ${unwrap(ok)}`);
 }
 
