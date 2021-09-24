@@ -142,7 +142,7 @@ A symbol used in Option to represent returning nothing as an enum.
 
 ### Result<T>
 
-A return type that is either some value (okay) or Err.
+A return type that is either some value (okay) or Err (Error).
 
 Example:
 
