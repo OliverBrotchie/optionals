@@ -146,9 +146,3 @@ export function isErr<T>(value: Option<T>): value is symbol {
 export function isOk<T>(value: Option<T>): value is T {
     return value !== Err;
 }
-
-const x: Option<number> = 0;
-
-unwrapOrElse(x, () => {
-    return "cool";
-});
