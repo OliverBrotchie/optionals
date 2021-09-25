@@ -54,7 +54,7 @@ type NoArgFn<T> = () => T;
  */
 export function unwrap<T>(value: OptionalGeneric<T>): T {
     if (Symbols.contain(value)) throw `unwrap on symbol.`;
-    else return value as T;
+    else return value;
 }
 
 /**
@@ -64,7 +64,7 @@ export function unwrap<T>(value: OptionalGeneric<T>): T {
  * @param fallback a fallback value of type `T`
  */
 export function unwrapOr<T, U>(value: OptionalGeneric<T>, fallback: U): T | U {
-    return Symbols.contain(value) ? fallback : (value as T);
+    return Symbols.contain(value) ? fallback : value;
 }
 
 /**
@@ -78,7 +78,7 @@ export function unwrapOrElse<T, U>(
     fn: NoArgFn<U>
 ): T | U {
     if (Symbols.contain(value)) return fn();
-    else return value as T;
+    else return value;
 }
 
 /**
@@ -92,7 +92,7 @@ export function map<T, U>(
     fn: OneArgFn<T, U>
 ): OptionalGeneric<U> {
     if (Symbols.contain(value)) return None;
-    else return fn(value as T);
+    else return fn(value);
 }
 
 /**
@@ -108,7 +108,7 @@ export function mapOr<T, U, F>(
     fn: OneArgFn<T, U>
 ): F | U {
     if (Symbols.contain(value)) return fallback;
-    else return fn(value as T);
+    else return fn(value);
 }
 
 /**
