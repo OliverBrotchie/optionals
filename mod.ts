@@ -29,7 +29,7 @@ class SymbolHandler {
     /**
      * Test if the SymbolHandler contains a symbol
      */
-    contain(e: OptionalGeneric<unknown>): boolean {
+    contain<T>(e: OptionalGeneric<T>): e is symbol {
         return this.values.has(e as symbol);
     }
 }
