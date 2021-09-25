@@ -1,5 +1,5 @@
 /**
- * Optionals v1.0.2
+ * Optionals v1.0.3
  */
 
 export const None = Symbol(`None`);
