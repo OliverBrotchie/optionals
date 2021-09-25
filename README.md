@@ -33,9 +33,9 @@ function divide(numerator: number, denominator: number): Option<number> {
 const some = divide(2, 3);
 const none = divide(2, 0);
 
-// Pattern match to retrieve the value
+// Test if value is not None
 if (isOk(some)) {
-    console.log(`Result: ${unwrap(ok)}`); // Unwrap returns the contained value if it is not an Err
+    console.log(`Result: ${unwrap(ok)}`); // Unwrap returns the contained value if it is not a Symbol
 }
 
 // Deal with a None

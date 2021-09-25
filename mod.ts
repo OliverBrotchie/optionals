@@ -52,9 +52,9 @@ type NoArgFn<T> = () => T;
  *
  * @param value an `Option<T>` or `Result<T>`
  */
-export function unwrap(value: OptionalGeneric<unknown>): unknown {
+export function unwrap<T>(value: OptionalGeneric<T>): T {
     if (Symbols.contain(value)) throw `unwrap on symbol.`;
-    else return value;
+    else return value as T;
 }
 
 /**
@@ -63,11 +63,8 @@ export function unwrap(value: OptionalGeneric<unknown>): unknown {
  * @param value an `Option<T>` or `Result<T>`
  * @param fallback a fallback value of type `T`
  */
-export function unwrapOr(
-    value: Option<unknown> | Result<unknown>,
-    fallback: unknown
-): unknown {
-    return Symbols.contain(value) ? fallback : value;
+export function unwrapOr<T, U>(value: OptionalGeneric<T>, fallback: U): T | U {
+    return Symbols.contain(value) ? fallback : (value as T);
 }
 
 /**
@@ -76,12 +73,12 @@ export function unwrapOr(
  * @param valuean an `Option<T>` or `Result<T>`
  * @param fn
  */
-export function unwrapOrElse(
-    value: Option<unknown> | Result<unknown>,
-    fn: NoArgFn<unknown>
-): unknown {
+export function unwrapOrElse<T, U>(
+    value: OptionalGeneric<T>,
+    fn: NoArgFn<U>
+): T | U {
     if (Symbols.contain(value)) return fn();
-    else return value;
+    else return value as T;
 }
 
 /**
@@ -90,12 +87,12 @@ export function unwrapOrElse(
  * @param value an `Option<T>` or `Result<T>`
  * @param fn
  */
-export function map(
-    value: Option<unknown> | Result<unknown>,
-    fn: OneArgFn<unknown, unknown>
-): Option<unknown> | Result<unknown> {
+export function map<T, U>(
+    value: OptionalGeneric<T>,
+    fn: OneArgFn<T, U>
+): OptionalGeneric<U> {
     if (Symbols.contain(value)) return None;
-    else return fn(value);
+    else return fn(value as T);
 }
 
 /**
@@ -105,13 +102,13 @@ export function map(
  * @param fallback a fallback value of type `T`
  * @param fn
  */
-export function mapOr(
-    value: Option<unknown> | Result<unknown>,
-    fallback: unknown,
-    fn: OneArgFn<unknown, unknown>
-): unknown {
+export function mapOr<T, U, F>(
+    value: OptionalGeneric<T>,
+    fallback: F,
+    fn: OneArgFn<T, U>
+): F | U {
     if (Symbols.contain(value)) return fallback;
-    else return fn(value);
+    else return fn(value as T);
 }
 
 /**
@@ -119,7 +116,7 @@ export function mapOr(
  *
  * @param value Value that is either `Some<T>` or `None`
  */
-export function isNone(value: Option<unknown>): value is typeof None {
+export function isNone<T>(value: Option<T>): value is symbol {
     return value === None;
 }
 
@@ -128,7 +125,7 @@ export function isNone(value: Option<unknown>): value is typeof None {
  *
  * @param value Value that is either `Some<T>` or `None`
  */
-export function isSome(value: Option<unknown>): boolean {
+export function isSome<T>(value: Option<T>): value is T {
     return value !== None;
 }
 
@@ -137,7 +134,7 @@ export function isSome(value: Option<unknown>): boolean {
  *
  * @param value Value that is either `Ok<T>` or an `Error`
  */
-export function isErr(value: Option<unknown>): value is typeof Err {
+export function isErr<T>(value: Option<T>): value is symbol {
     return value === Err;
 }
 
@@ -146,6 +143,12 @@ export function isErr(value: Option<unknown>): value is typeof Err {
  *
  * @param value Value that is either `Ok<T>` or an `Error`
  */
-export function isOk(value: Option<unknown>): boolean {
+export function isOk<T>(value: Option<T>): value is T {
     return value !== Err;
 }
+
+const x: Option<number> = 0;
+
+unwrapOrElse(x, () => {
+    return "cool";
+});
