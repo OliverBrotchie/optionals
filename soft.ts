@@ -1,5 +1,5 @@
 /**
- * Optionals v1.0.3
+ * Optionals v1.0.4 - Soft Types
  */
 
 export const None = Symbol(`None`);
@@ -20,7 +20,7 @@ class SymbolHandler {
     /**
      * Add a new symbol to match on
      *
-     * @param s an instance of a symbol
+     * @param s An instance of a symbol.
      */
     add(s: symbol): void {
         this.values.add(s);
@@ -50,7 +50,7 @@ type NoArgFn<T> = () => T;
  * Returns the contained Ok or Some value.
  * Note: Only use if value is not an Error or None as this will throw an error (see unwrap_or).
  *
- * @param value an `Option<T>` or `Result<T>`
+ * @param value An `Option<T>` or `Result<T>`.
  */
 export function unwrap<T>(value: OptionalGeneric<T>): T {
     if (Symbols.contain(value)) throw `unwrap on symbol.`;
@@ -60,8 +60,8 @@ export function unwrap<T>(value: OptionalGeneric<T>): T {
 /**
  * Either returns the contained Ok/Some value or returns fallback value.
  *
- * @param value an `Option<T>` or `Result<T>`
- * @param fallback a fallback value of type `T`
+ * @param value An `Option<T>` or `Result<T>`.
+ * @param fallback a Fallback value of type `T`.
  */
 export function unwrapOr<T, U>(value: OptionalGeneric<T>, fallback: U): T | U {
     return Symbols.contain(value) ? fallback : value;
@@ -70,7 +70,7 @@ export function unwrapOr<T, U>(value: OptionalGeneric<T>, fallback: U): T | U {
 /**
  * Returns the contained Some value or computes new value from function.
  *
- * @param valuean an `Option<T>` or `Result<T>`
+ * @param value An `Option<T>` or `Result<T>`.
  * @param fn
  */
 export function unwrapOrElse<T, U>(
@@ -84,22 +84,22 @@ export function unwrapOrElse<T, U>(
 /**
  * Maps a Result Option to a new value, leaving Error or None values untouched.
  *
- * @param value an `Option<T>` or `Result<T>`
+ * @param value An `Option<T>` or `Result<T>`
  * @param fn
  */
 export function map<T, U>(
     value: OptionalGeneric<T>,
     fn: OneArgFn<T, U>
 ): OptionalGeneric<U> {
-    if (Symbols.contain(value)) return None;
+    if (Symbols.contain(value)) return value;
     else return fn(value);
 }
 
 /**
  * Either computes a new value or returns fallback value if Err or None.
  *
- * @param value an `Option<T>` or `Result<T>`
- * @param fallback a fallback value of type `T`
+ * @param value An `Option<T>` or `Result<T>`.
+ * @param fallback a Fallback value of type `T`.
  * @param fn
  */
 export function mapOr<T, U, F>(
@@ -112,37 +112,37 @@ export function mapOr<T, U, F>(
 }
 
 /**
- * Asserts whether given value is None
+ * Asserts whether given value is None.
  *
- * @param value Value that is either `Some<T>` or `None`
+ * @param value Value that is either `Some<T>` or `None`.
  */
 export function isNone<T>(value: Option<T>): value is symbol {
     return value === None;
 }
 
 /**
- * Asserts whether given value is Some
+ * Asserts whether given value is Some.
  *
- * @param value Value that is either `Some<T>` or `None`
+ * @param value Value that is either `Some<T>` or `None`.
  */
 export function isSome<T>(value: Option<T>): value is T {
     return value !== None;
 }
 
 /**
- * Asserts whether given value is an Error
+ * Asserts whether given value is an Error.
  *
- * @param value Value that is either `Ok<T>` or an `Error`
+ * @param value Value that is either `Ok<T>` or An `Error`.
  */
-export function isErr<T>(value: Option<T>): value is symbol {
+export function isErr<T>(value: Result<T>): value is symbol {
     return value === Err;
 }
 
 /**
- * Asserts whether given value is Ok
+ * Asserts whether given value is Ok.
  *
- * @param value Value that is either `Ok<T>` or an `Error`
+ * @param value Value that is either `Ok<T>` or An `Error`.
  */
-export function isOk<T>(value: Option<T>): value is T {
+export function isOk<T>(value: Result<T>): value is T {
     return value !== Err;
 }
