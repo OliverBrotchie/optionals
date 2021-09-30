@@ -137,7 +137,7 @@ function divide(numerator: number, denominator: number): Option<number> {
 peek(divide(2, 0)); // Symbol(`None`)
 ```
 
-### Some(T)
+### Some
 
 A type used in Option to return a value.
 
@@ -162,18 +162,18 @@ function relaxedAdd(
     if (typeof numerator != "number" || typeof denominator != "number")
         return Err(SomeErr);
     else {
-        return Some(numerator + denominator);
+        return Ok(numerator + denominator);
     }
 }
 
 peek(relaxedAdd("2", 2)); // Symbol(`Inputs were not numbers!`)
 ```
 
-### Ok(T)
+### Ok
 
 A type used in Result to say that a value is not an Error
 
-### Err(T)
+### Err
 
 A type used in Result to return an error.
 
