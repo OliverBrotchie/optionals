@@ -145,7 +145,7 @@ A type used in Option to return a value.
 
 A symbol used in Option to represent returning nothing as an enum.
 
-### Result<T, E>
+### Result
 
 A return type that is either Some value (okay) or an Err value (Error).
 
@@ -248,7 +248,7 @@ mapOr(none, "foo", (val) => {
 
 ### match
 
-A non-exhaustive rust-style match statment.
+A non-exhaustive rust-style match statment.  
 Use of generic Var and Default case is pemitted.
 
 Example:
@@ -280,8 +280,8 @@ x; // value
 
 ### eMatch
 
-An exhaustive rust-style match statment.
-Use of generic Var is permitted.
+An exhaustive rust-style match statment.  
+Use of generic Var is permitted.  
 Note: Function will throw an error if all possible branches are not covered.
 
 Example:
@@ -318,6 +318,17 @@ eMatch(Ok("Value"), [
         },
     ],
 ]); // Error Missing Branches. Cases Ok(Var) and Err(Var) are not covered!
+```
+
+### peek
+
+Get the contained value regardless of type.  
+Note: Other functions should be used to handle Err or None, this function for debugging purposes!
+
+Example:
+
+```ts
+peek(Some(2)); // 2
 ```
 
 ### isNone, isSome, isErr, isOkay
