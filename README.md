@@ -12,5 +12,5 @@ This module provides a minimal, fast and simple way to create expressive functio
 
 Optionals provides two type systems, Hard or Soft typing.
 
-- [Hard](https://github.com/OliverBrotchie/optionals/blob/main/hard.md) - Return types are actual values - strict typing with rust-like exhaustive pattern matching!
-- [Soft](https://github.com/OliverBrotchie/optionals/blob/main/soft.md) - Return types are compiled away at runtime - a lightweight structure, ideal for small projects.
+- [Hard](https://github.com/OliverBrotchie/optionals/blob/main/hard.md) - Return types are actual values. Strict typing with rust-like exhaustive pattern matching!
+- [Soft](https://github.com/OliverBrotchie/optionals/blob/main/soft.md) - Return types are compiled away at runtime. A lightweight structure, ideal for small projects.
