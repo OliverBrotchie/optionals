@@ -293,13 +293,13 @@ export function eMatch<T, U, O>(
                 }
         });
 
-        // re-revere as this function uses value by-val
+        // re-revere as this function is called by-value
         callStack.reverse();
 
         return cases;
     }
 
-    // Pretty prents a call stack
+    // Pretty prints a call stack
     function prettyPrint<T>(callStack?: Array<string>, value?: T): string {
         const m = new Map<string, string>([
             ["None", "None"],
