@@ -1,6 +1,12 @@
-# Optionals&nbsp;&nbsp; 🦀
+<br/>
 
-Rust-like error handling and options for TypeScript and Deno! This module allows you to remove `null` and `undefined` from your projects with the help of ES6 Symbols and helper functions. Inspired by Rust's `Option`, `Result` and `match` statments.
+<img src="logo.png" width="400" margin="30px"/>
+
+#
+
+**Rust-like error handling and options for TypeScript and Deno!**
+
+This module allows you to remove `null` and `undefined` from your projects with the help of ES6 Symbols and helper functions. Inspired by Rust's `Option`, `Result` and `match` statments.
 
 ## Why should you use Optionals?
 
