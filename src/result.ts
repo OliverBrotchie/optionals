@@ -7,7 +7,7 @@
  * Note: Please use either Ok or Err to construct Results.
  *
  * @example
- * ```
+ * ```ts
  * function divide(left: number, right: number): Result<number, Error> {
  *   if (right === 0) return Err("Divided by zero");
  *
@@ -205,7 +205,7 @@ export class Result<T, E extends Error> {
    *
    * @returns {T | E}
    * @example
-   * ```
+   * ```ts
    * function coolOrNice(input: Result<string, Error>): Result<void, Error> {
    *   switch (input.peek()) {
    *     case "cool":
@@ -256,7 +256,7 @@ export class Result<T, E extends Error> {
    * @returns {{ok: Array<T>, err: Array<E>}}
    *
    * @example
-   * ```
+   * ```ts
    * const results = [Ok(2), Ok(16), Err("Something went wrong!")]
    *
    * Result.partition(results) // { ok:[2, 16], err:[Error("Something went wrong!")]}
@@ -287,7 +287,7 @@ export class Result<T, E extends Error> {
  * @param {Exclude<T, E>} input a value that does not extend the `Error` type.
  * @returns {Result<T, E>}
  * @example
- * ```
+ * ```ts
  * function divide(left: number, right: number): Result<number, Error> {
  *   if (right === 0) return Err("Divided by zero");
  *
@@ -306,7 +306,7 @@ export function Ok<T, E extends Error>(input?: Exclude<T, E>) {
  * @param {E | string} input a value that extends the `Error` type.
  * @returns {Result<T, E>}
  * @example
- * ```
+ * ```ts
  * function divide(left: number, right: number): Result<number, Error> {
  *   if (right === 0) return Err("Divided by zero");
  *

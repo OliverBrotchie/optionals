@@ -18,16 +18,16 @@ This module provides a minimal, fast and simple way to create expressive functio
 
 ```ts
 // Result
-import { Result, Ok, Err } from "https://deno.land/x/optionals@v2.0.1`/mod.ts";
+import { Result, Ok, Err } from "https://deno.land/x/optionals@v2.0.2`/mod.ts";
 
 // Option
 import {
   Option,
   Some,
   None,
-} from "https://deno.land/x/optionals@v2.0.1/mod.ts";
+} from "https://deno.land/x/optionals@v2.0.2/mod.ts";
 ```
 
 ## Documentation
 
-Please find further documentation on the [doc](https://doc.deno.land/https://deno.land/x/optionals@v2.0.1/mod.ts) page!
+Please find further documentation on the [doc](https://doc.deno.land/https://deno.land/x/optionals@v2.0.2/mod.ts) page!

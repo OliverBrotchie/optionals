@@ -158,7 +158,7 @@ export class Option<T> {
    *
    * @returns {T | typeof none}
    * @example
-   * ```
+   * ```ts
    * function coolOrNice(input: Option<string>): Option<void> {
    *   switch (input.peek()) {
    *     case "cool":
@@ -200,7 +200,7 @@ export class Option<T> {
  * @param {Exclude<T, typeof none>} input a value that isnt None.
  * @returns {Option<T>}
  * @example
- * ```
+ * ```ts
  * function divide(left: number, right: number): Option<number> {
  *   if (right === 0) return None();
  *
@@ -218,7 +218,7 @@ export function Some<T>(input: Exclude<T, typeof none>) {
  *
  * @returns {Option<T>}
  * @example
- * ```
+ * ```ts
  *  function divide(left: number, right: number): Option<number> {
  *   if (right === 0) return None();
  *
