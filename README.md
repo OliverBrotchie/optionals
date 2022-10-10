@@ -6,19 +6,28 @@
 
 **Rust-like error handling and options for TypeScript and Deno!**
 
-This module allows you to remove `null` and `undefined` from your projects with the help of ES6 Symbols and helper functions. Inspired by Rust's `Option`, `Result` and `match` statments.
-
-**PLEASE NOTE: This library will soon be moving to [a new re-implementation](https://gist.github.com/OliverBrotchie/101708c78cca74dec3c5e2254f00f1cc) that is closer to Rust's implementation.**
+This module allows you to remove `null` and `undefined` from your projects with the help of ES6 Symbols and helper functions. Inspired by Rust's `Option`, `Result` enums.
 
 ## Why should you use Optionals?
 
-The standard practice of returning `null` or `undefined` when no other value can be returned, leaves something to be desired as there is no way to tell where in the code said value came from. Rust's implementation of error handling also has many benefits that cannot be expressed in the normal `try` `catch` JS pattern.
+The standard practice of returning `null` or `undefined` when no other value can be returned means that there is no simple way to express the difference between a function that has returned "nothing" and a `null` return type. There are also no easy ways to handle errors in a functional pattern. Rust's implementation of `Option` and `Result` guarantees correctness by expressly forcing correct result-handling practices.
 
-This module provides a minimal, fast and simple way to create expressive functions and perform better pattern matching! 🚀
+This module provides a minimal, fast and simple way to create expressive functions and perform better pattern matching on resulting values! 🚀
 
-## Type Systems
+## Usage
 
-**Optionals** provides two type systems, **Hard** or **Soft** typing.
+```ts
+// Result
+import { Result, Ok, Err } from "https://deno.land/x/optionals@v2.0.0/mod.ts";
 
--   **[Hard](https://github.com/OliverBrotchie/optionals/blob/main/hard.md)** - Return types are actual values. Strict typing with rust-like exhaustive pattern matching!
--   **[Soft](https://github.com/OliverBrotchie/optionals/blob/main/soft.md)** - Return types are compiled away at runtime. A lightweight structure, ideal for small projects.
+// Option
+import {
+  Option,
+  Some,
+  None,
+} from "https://deno.land/x/optionals@v2.0.0/mod.ts";
+```
+
+## Documentation
+
+Please find further documentation on the [doc](https://doc.deno.land/https://deno.land/x/optionals@v2.0.0/mod.ts) page!
