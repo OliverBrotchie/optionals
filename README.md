@@ -1,12 +1,12 @@
-<br/>
+<div align="center">
 
-<img src="logo.png" width="400" margin="30px"/>
+  <h1><code>Optionals</code></h1>
 
-#
+<strong>Rust-like error handling and options for TypeScript and Deno!</strong>
 
-**Rust-like error handling and options for TypeScript and Deno!**
+</div>
 
-This module allows you to remove `null` and `undefined` from your projects with the help of ES6 Symbols and helper functions. Inspired by Rust's `Option`, `Result` enums.
+This module allows you to remove `null` and `undefined` from your projects with the help of ES6 Symbols and helper methods. Inspired by Rust's `Option`, `Result` enums.
 
 ## Why should you use Optionals?
 
@@ -18,16 +18,16 @@ This module provides a minimal, fast and simple way to create expressive functio
 
 ```ts
 // Result
-import { Result, Ok, Err } from "https://deno.land/x/optionals@v2.0.0/mod.ts";
+import { Result, Ok, Err } from "https://deno.land/x/optionals@v2.0.1`/mod.ts";
 
 // Option
 import {
   Option,
   Some,
   None,
-} from "https://deno.land/x/optionals@v2.0.0/mod.ts";
+} from "https://deno.land/x/optionals@v2.0.1/mod.ts";
 ```
 
 ## Documentation
 
-Please find further documentation on the [doc](https://doc.deno.land/https://deno.land/x/optionals@v2.0.0/mod.ts) page!
+Please find further documentation on the [doc](https://doc.deno.land/https://deno.land/x/optionals@v2.0.1/mod.ts) page!
