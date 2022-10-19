@@ -3,7 +3,10 @@
  */
 import { parse } from "https://deno.land/std@0.160.0/flags/mod.ts";
 import { basename } from "https://deno.land/std@0.160.0/path/mod.ts";
-import { inc as increment } from "https://deno.land/x/semver@v1.4.1/mod.ts";
+import {
+  inc as increment,
+  ReleaseType,
+} from "https://deno.land/x/semver@v1.4.1/mod.ts";
 import {
   build,
   BuildOptions,
@@ -12,22 +15,20 @@ import {
 
 await emptyDir("./npm");
 
-function versionHandler(current: string, inputs: typeof args): string {
-  switch (true) {
-    case inputs.major:
-      return increment(current, "major") ?? current;
-    case inputs.minor:
-      return increment(current, "minor") ?? current;
-    case inputs.patch:
-      return increment(current, "patch") ?? current;
-    case inputs.premajor:
-      return increment(current, "premajor") ?? current;
-    case inputs.preminor:
-      return increment(current, "preminor") ?? current;
-    case inputs.prepatch:
-      return increment(current, "prepatch") ?? current;
-    case inputs.prerelease:
-      return increment(current, "prerelease") ?? current;
+function versionHandler(current: string, releaseType: ReleaseType): string {
+  const releaseTypes: ReleaseType[] = [
+    "major",
+    "minor",
+    "patch",
+    "pre",
+    "premajor",
+    "preminor",
+    "prepatch",
+    "prerelease",
+  ];
+
+  if (releaseTypes.includes(releaseType)) {
+    return increment(current, releaseType) ?? current;
   }
 
   return current;
@@ -40,28 +41,14 @@ const packageText = await Deno.readTextFile(packageFile);
 const packageJSON = <BuildOptions["package"]> JSON.parse(packageText);
 const { version } = packageJSON;
 const args = parse(Deno.args, {
-  boolean: [
-    "major",
-    "minor",
-    "patch",
-    "premajor",
-    "preminor",
-    "prepatch",
-    "prerelease",
-  ],
-  string: ['cp'],
+  string: ["cp", "release"],
   default: {
-    cp: '',
-    major: false,
-    minor: false,
-    patch: false,
-    premajor: false,
-    preminor: false,
-    prepatch: false,
-    prerelease: false,
+    cp: "",
+    release: "",
   },
 });
-packageJSON.version = versionHandler(version, args);
+const release = <ReleaseType> args.release;
+packageJSON.version = versionHandler(version, release);
 
 await build({
   entryPoints: ["./mod.ts"],
