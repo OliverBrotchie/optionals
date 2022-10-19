@@ -73,7 +73,7 @@ await build({
 });
 
 // post build steps
-await Deno.copyFile("LICENSE.md", "npm/LICENSE.md");
+await Deno.copyFile("LICENSE", "npm/LICENSE");
 await Deno.copyFile("README.md", "npm/README.md");
 
 if (packageJSON.version === version) {
