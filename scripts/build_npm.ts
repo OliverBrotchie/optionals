@@ -6,7 +6,7 @@ import { basename } from "https://deno.land/std@0.160.0/path/mod.ts";
 import {
   inc as increment,
   ReleaseType,
-} from "https://deno.land/x/semver@v1.4.1/mod.ts";
+} from "https://deno.land/std@0.160.0/semver/mod.ts";
 import {
   build,
   BuildOptions,
