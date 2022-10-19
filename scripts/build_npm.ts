@@ -62,7 +62,7 @@ const args = parse(Deno.args, {
 packageJSON.version = versionHandler(version, args);
 
 await build({
-  entryPoints: ["./mod.ts", "./polyfill.ts"],
+  entryPoints: ["./mod.ts"],
   outDir: "./npm",
   shims: {
     deno: true,
