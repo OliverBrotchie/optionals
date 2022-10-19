@@ -3,7 +3,7 @@
     "test": "deno test --coverage=coverage",
     "lcov": "deno coverage coverage --lcov --output=coverage/report.lcov",
     "cover": "deno task clean && deno task test && deno task lcov && genhtml -o coverage/html coverage/report.lcov",
-    "build": "deno run -A scripts/build_npm.ts",
+    "build": "deno run -A scripts/build_npm.ts --cp=LICENSE,README.md",
     "publish": "cd ./npm && npm publish",
     "clean": "rm -rf ./npm ./coverage"
   }

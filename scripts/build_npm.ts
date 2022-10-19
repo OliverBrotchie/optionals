@@ -49,7 +49,9 @@ const args = parse(Deno.args, {
     "prepatch",
     "prerelease",
   ],
+  string: ['cp'],
   default: {
+    cp: '',
     major: false,
     minor: false,
     patch: false,
@@ -73,8 +75,9 @@ await build({
 });
 
 // post build steps
-await Deno.copyFile("LICENSE", "npm/LICENSE");
-await Deno.copyFile("README.md", "npm/README.md");
+for (const filepath of args.cp.split(/,/g)) {
+  await Deno.copyFile(filepath, `npm/${filepath}`);
+}
 
 if (packageJSON.version === version) {
   console.log(
