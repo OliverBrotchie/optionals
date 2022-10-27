@@ -40,6 +40,14 @@ Deno.test("Result", async (t) => {
     }
   );
 
+  await t.step("Symbol.toStringTag - Should return correct value.", () => {
+    assertEquals(new Result("Ok")[Symbol.toStringTag], "Result");
+  });
+
+  await t.step("Symbol.iterator - Should return correct value.", () => {
+    assertEquals([...new Result("Ok")], ["Ok"]);
+  });
+
   await t.step("expect - Should get contained value.", () => {
     const res = new Result("Ok").expect("Test");
     assertEquals(res, "Ok");
@@ -52,6 +60,24 @@ Deno.test("Result", async (t) => {
         new Result(new Error("Test")).expect("Alternative");
       } catch (e) {
         assertEquals(e, new Error("Alternative"));
+        return;
+      }
+      fail("Method did not throw.");
+    }
+  );
+
+  await t.step("expectErr - Should get contained Error value.", () => {
+    const res = new Result(new Error("Test")).expectErr("Alternative");
+    assertEquals(res, new Error("Test"));
+  });
+
+  await t.step(
+    "expectErr Ok - Should throw an Error with a message if Result contains Ok.",
+    () => {
+      try {
+        new Result("Ok").expectErr("Test");
+      } catch (e) {
+        assertEquals(e, new Error("Test"));
         return;
       }
       fail("Method did not throw.");
@@ -233,7 +259,7 @@ Deno.test("Result - Supporting Function Tests", async (t) => {
   });
 
   await t.step("fromAsync Error - Should return Err result.", async () => {
-    const res = await Result.from(
+    const res = await Result.fromAsync(
       async () => await Promise.reject(new Error("Test"))
     );
     assert(res.isErr());

@@ -20,6 +20,14 @@ Deno.test("Option", async (t) => {
     assert(!new Option(symbol).isNone());
   });
 
+  await t.step("Symbol.toStringTag - Should return correct value.", () => {
+    assertEquals(new Option("Some")[Symbol.toStringTag], "Option");
+  });
+
+  await t.step("Symbol.iterator - Should return correct value.", () => {
+    assertEquals([...new Option("Ok")], ["Ok"]);
+  });
+
   await t.step("expect - Should get contained value.", () => {
     const res = new Option("Some").expect("Test");
     assertEquals(res, "Some");

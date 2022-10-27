@@ -38,7 +38,7 @@ export class Option<T> {
    * Converts Option into a String for display purposes.
    */
   get [Symbol.toStringTag]() {
-    return `Result`;
+    return `Option`;
   }
 
   /**
