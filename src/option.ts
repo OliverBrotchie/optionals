@@ -1,14 +1,14 @@
 /**
  * The primitive None value.
  *
- * Note: To construct a None variant Option, please use `None()` instead.
+ * _Note: To construct a None variant Option, please use `None()` instead._
  */
 export const none = Symbol("None");
 
 /**
  * A Rust-like Option class.
  *
- * Note: Please use either `Some` or `None` to construct an Option.
+ * _Note: Please use either `Some` or `None` to construct an Option._
  *
  * @example
  * ```
@@ -26,12 +26,26 @@ export class Option<T> {
   /**
    * A constructor for an Option.
    *
-   * Note: Please use either `Some` or `None` to construct Options.
+   * _Note: Please use either `Some` or `None` to construct Options._
    *
    * @param {T | typeof none} input The value to wrap in an Option.
    */
   constructor(input: T | typeof none) {
     this.val = input;
+  }
+
+  /**
+   * Converts Option into a String for display purposes.
+   */
+  get [Symbol.toStringTag]() {
+    return `Result`;
+  }
+
+  /**
+   * Iterator support for Option.
+   */
+  *[Symbol.iterator]() {
+    yield this.val;
   }
 
   /**
@@ -154,7 +168,7 @@ export class Option<T> {
   /**
    * Returns contained value for use in matching.
    *
-   * Note: Please only use this to match against in `if` or `swtich` statments.
+   * _Note: Please only use this to match against in `if` or `swtich` statments._
    *
    * @returns {T | typeof none}
    * @example
@@ -182,10 +196,27 @@ export class Option<T> {
    * Run a closure in a `try`/`catch` and convert it into an Option.
    * If the function throws an Error, an Option containing None will be reutrned.
    *
+   * _Note: Please use `fromAsync` to capture the result of asynchronous closures._
+   * @param {Function} fn The closure to run.
+   * @returns {Option<T>} The result of the closure.
+   */
+  static from<T>(fn: () => T): Option<T> {
+    try {
+      return new Option<T>(fn());
+    } catch (_) {
+      return new Option<T>(none);
+    }
+  }
+
+  /**
+   * Run an asynchronous closure in a `try`/`catch` and convert it into an Option.
+   * If the function throws an Error, an Option containing None will be reutrned.
+   *
+   * _Note: Please use `from` to capture the result of synchronous closures._
    * @param {Function} fn The closure to run.
    * @returns {Promise<Option<T>>} The result of the closure.
    */
-  static async from<T>(fn: (() => T) | (() => Promise<T>)): Promise<Option<T>> {
+  static async fromAsync<T>(fn: () => Promise<T>): Promise<Option<T>> {
     try {
       return new Option<T>(await fn());
     } catch (_) {

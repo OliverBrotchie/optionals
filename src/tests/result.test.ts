@@ -210,18 +210,34 @@ Deno.test("Result - Supporting Function Tests", async (t) => {
     assertEquals(res.unwrapErr().message, "Test");
   });
 
-  await t.step("from - Should return Ok result.", async () => {
-    const res = await Result.from(() => "Test");
+  await t.step("from - Should return Ok result.", () => {
+    const res = Result.from(() => "Test");
     assert(res.isOk());
     assertEquals(res.peek(), "Test");
   });
 
-  await t.step("from Error - Should return Err result.", async () => {
-    const res = await Result.from(() => {
+  await t.step("from Error - Should return Err result.", () => {
+    const res = Result.from(() => {
       throw new Error("Test");
     });
     assert(res.isErr());
     assertEquals(res.peek().message, "Test");
+  });
+
+  await t.step("fromAsync - Should return Ok result.", async () => {
+    const res = await Result.fromAsync(
+      async () => await Promise.resolve("Test")
+    );
+    assert(res.isOk());
+    assertEquals(res.peek(), "Test");
+  });
+
+  await t.step("fromAsync Error - Should return Err result.", async () => {
+    const res = await Result.from(
+      async () => await Promise.reject(new Error("Test"))
+    );
+    assert(res.isErr());
+    assertEquals((res.peek() as Error).message, "Test");
   });
 
   await t.step(

@@ -4,7 +4,7 @@
 /**
  * A Rust-like Result class.
  *
- * Note: Please use either Ok or Err to construct Results.
+ * _Note: Please use either Ok or Err to construct Results._
  *
  * @example
  * ```ts
@@ -20,14 +20,28 @@ export class Result<T, E extends Error> {
   private val: T | E;
 
   /**
-   * A constructor for a Result
+   * A constructor for a Result.
    *
    * @param {T | E} input The Result value.
    *
-   * Note: Please use either `Ok` or `Err` to construct Results.
+   * _Note: Please use either `Ok` or `Err` to construct Results._
    */
   constructor(input: T | E) {
     this.val = input;
+  }
+
+  /**
+   * Converts Result into a String for display purposes.
+   */
+  get [Symbol.toStringTag]() {
+    return `Result`;
+  }
+
+  /**
+   * Iterator support for Result.
+   */
+  *[Symbol.iterator]() {
+    yield this.val;
   }
 
   /**
@@ -77,6 +91,21 @@ export class Result<T, E extends Error> {
    */
   expect(msg: string): T {
     if (this.isErr()) {
+      this.formatError(new Error(msg));
+    }
+
+    return this.val as T;
+  }
+
+  /**
+   * Returns the contained Err value, consuming the Result.
+   * Throws an Error with a given message if contained value is not an Err.
+   *
+   * @param {string} msg An error message to throw if contained value is Ok.
+   * @returns {T}
+   */
+  expectErr(msg: string): T {
+    if (this.isOk()) {
       this.formatError(new Error(msg));
     }
 
@@ -201,7 +230,7 @@ export class Result<T, E extends Error> {
   /**
    * Returns contained value for use in matching.
    *
-   * Note: Please only use this to match against in `if` or `swtich` statments.
+   * _Note: Please only use this to match against in `if` or `swtich` statments._
    *
    * @returns {T | E}
    * @example
@@ -236,12 +265,27 @@ export class Result<T, E extends Error> {
 
   /**
    * Run a closure in a `try`/`catch` and convert it into a Result.
+   *
+   * _Note: Please use `fromAsync` to capture the Result of asynchronous closures._
    * @param {Function} fn The closure to run
    * @returns {Result<T, Error>} The Result of the closure
    */
-  static async from<T>(
-    fn: (() => T) | (() => Promise<T>)
-  ): Promise<Result<T, Error>> {
+  static from<T>(fn: () => T): Result<T, Error> {
+    try {
+      return new Result<T, Error>(fn());
+    } catch (e: unknown) {
+      return new Result<T, Error>(e as Error);
+    }
+  }
+
+  /**
+   * Run an asynchronous closure in a `try`/`catch` and convert it into a Result.
+   *
+   * _Note: Please use `from` to capture the Result of synchronous closures._
+   * @param {Function} fn The synchronous closure to run
+   * @returns {Promise<Result<T, Error>>} The Result of the closure
+   */
+  static async fromAsync<T>(fn: () => Promise<T>): Promise<Result<T, Error>> {
     try {
       return new Result<T, Error>(await fn());
     } catch (e: unknown) {

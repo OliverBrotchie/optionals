@@ -123,16 +123,31 @@ Deno.test("Result - Supporting Function Tests", async (t) => {
     assertEquals(res.isNone(), true);
   });
 
-  await t.step("from - Should return Ok result.", async () => {
-    const res = await Option.from(() => "Test");
+  await t.step("from - Should return Ok result.", () => {
+    const res = Option.from(() => "Test");
     assert(res.isSome());
     assertEquals(res.peek(), "Test");
   });
 
-  await t.step("from Error - Should return None result.", async () => {
-    const res = await Option.from(() => {
+  await t.step("from Error - Should return None result.", () => {
+    const res = Option.from(() => {
       throw new Error("Test");
     });
+    assert(res.isNone());
+  });
+
+  await t.step("fromAsync - Should return Ok result.", async () => {
+    const res = await Option.fromAsync(
+      async () => await Promise.resolve("Test")
+    );
+    assert(res.isSome());
+    assertEquals(res.peek(), "Test");
+  });
+
+  await t.step("fromAsync Error - Should return None result.", async () => {
+    const res = await Option.fromAsync(
+      async () => await Promise.reject(new Error("Test"))
+    );
     assert(res.isNone());
   });
 });
