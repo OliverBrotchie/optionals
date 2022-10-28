@@ -14,7 +14,7 @@ Deno.test("Option", async (t) => {
     assert(new Option(symbol).isSome());
   });
 
-  await t.step("isErr - Should correctly identify a None value.", () => {
+  await t.step("isNone - Should correctly identify a None value.", () => {
     assert(!new Option("Some").isNone());
     assert(new Option(none).isNone());
     assert(!new Option(symbol).isNone());
@@ -126,9 +126,19 @@ Deno.test("Result - Supporting Function Tests", async (t) => {
     assertEquals(res.peek(), "Test");
   });
 
+  await t.step("Some instanceof - Should return true.", () => {
+    const res = Some("Test");
+    assert(res instanceof Some);
+  });
+
   await t.step("None - Should return None result.", () => {
     const res = None();
     assertEquals(res.isNone(), true);
+  });
+
+  await t.step("None instanceof - Should return true.", () => {
+    const res = None();
+    assert(res instanceof None);
   });
 
   await t.step("from - Should return Ok result.", () => {

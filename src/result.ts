@@ -339,10 +339,26 @@ export class Result<T, E extends Error> {
  * }
  *
  * ```
+ *
+ * @example
+ * ```ts
+ * const foo = Ok("Foo!");
+ *
+ * if (foo instanceof Ok) {
+ *  // Do something
+ * }
+ * ```
  */
 export function Ok<T, E extends Error>(input?: Exclude<T, E>) {
   return new Result<T, E>(input as T);
 }
+
+Object.defineProperty(Ok, Symbol.hasInstance, {
+  value: <T, E extends Error>(instance: Result<T, E>): boolean => {
+    if (typeof instance !== "object") return false;
+    return instance?.isOk() || false;
+  },
+});
 
 /**
  * Return a error result.
@@ -358,6 +374,15 @@ export function Ok<T, E extends Error>(input?: Exclude<T, E>) {
  * }
  *
  * ```
+ *
+ * @example
+ * ```ts
+ * const foo = Err(new Error("Foo!"));
+ *
+ * if (foo instanceof Err) {
+ *  // Do something
+ * }
+ * ```
  */
 export function Err<T, E extends Error>(input: E | string): Result<T, E> {
   if (typeof input === "string") {
@@ -365,3 +390,10 @@ export function Err<T, E extends Error>(input: E | string): Result<T, E> {
   }
   return new Result<T, E>(input);
 }
+
+Object.defineProperty(Err, Symbol.hasInstance, {
+  value: <T, E extends Error>(instance: Result<T, E>): boolean => {
+    if (typeof instance !== "object") return false;
+    return instance?.isErr() || false;
+  },
+});

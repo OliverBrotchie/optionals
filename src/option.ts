@@ -239,10 +239,26 @@ export class Option<T> {
  * }
  *
  * ```
+ *
+ * @example
+ * ```ts
+ * const foo = Some("Value");
+ *
+ * if (foo instanceof Some) {
+ *  // Do something
+ * }
+ * ```
  */
-export function Some<T>(input: Exclude<T, typeof none>) {
+export function Some<T>(input: Exclude<T, typeof none>): Option<T> {
   return new Option<T>(input as T);
 }
+
+Object.defineProperty(Some, Symbol.hasInstance, {
+  value: <T>(instance: Option<T>): boolean => {
+    if (typeof instance !== "object") return false;
+    return instance?.isSome() || false;
+  },
+});
 
 /**
  * Construct the None variant of Option.
@@ -256,7 +272,22 @@ export function Some<T>(input: Exclude<T, typeof none>) {
  *   return Some(left / right);
  * }
  * ```
+ * @example
+ * ```ts
+ * const foo = None();
+ *
+ * if (foo instanceof None) {
+ *  // Do something
+ * }
+ * ```
  */
 export function None<T>(): Option<T> {
   return new Option<T>(none);
 }
+
+Object.defineProperty(None, Symbol.hasInstance, {
+  value: <T>(instance: Option<T>): boolean => {
+    if (typeof instance !== "object") return false;
+    return instance?.isNone() || false;
+  },
+});

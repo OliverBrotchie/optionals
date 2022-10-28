@@ -224,6 +224,11 @@ Deno.test("Result - Supporting Function Tests", async (t) => {
     assertEquals(res.peek(), "Test");
   });
 
+  await t.step("Ok instanceof - Should return true.", () => {
+    const res = Ok("Test");
+    assertEquals(res instanceof Ok, true);
+  });
+
   await t.step("Err - Should return Error result.", () => {
     const res = Err(new Error("Test"));
     assertEquals(res.isErr(), true);
@@ -234,6 +239,11 @@ Deno.test("Result - Supporting Function Tests", async (t) => {
     const res = Err("Test");
     assertEquals(res.isErr(), true);
     assertEquals(res.unwrapErr().message, "Test");
+  });
+
+  await t.step("Err instanceof - Should return true.", () => {
+    const res = Err(new Error("Test"));
+    assertEquals(res instanceof Err, true);
   });
 
   await t.step("from - Should return Ok result.", () => {
