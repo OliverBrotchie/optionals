@@ -39,6 +39,9 @@ export class Result<T, E extends Error> {
 
   /**
    * Iterator support for Result.
+   *
+   * _Note: This method will only yeild if the Result is Ok._
+   * @returns {IterableIterator<T>}
    */
   *[Symbol.iterator]() {
     if (this.isOk()) yield this.val;

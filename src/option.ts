@@ -43,6 +43,9 @@ export class Option<T> {
 
   /**
    * Iterator support for Option.
+   *
+   * _Note: This method will only yeild if the Option is Some._
+   * @returns {IterableIterator<T>}
    */
   *[Symbol.iterator]() {
     if (this.isSome()) yield this.val;
@@ -50,7 +53,6 @@ export class Option<T> {
 
   /**
    * Returns true if contained value isnt None.
-   *
    * @returns {boolean}
    */
   isSome(): boolean {
