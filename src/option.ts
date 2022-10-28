@@ -45,7 +45,7 @@ export class Option<T> {
    * Iterator support for Option.
    */
   *[Symbol.iterator]() {
-    yield this.val;
+    if (this.isSome()) yield this.val;
   }
 
   /**

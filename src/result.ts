@@ -41,7 +41,7 @@ export class Result<T, E extends Error> {
    * Iterator support for Result.
    */
   *[Symbol.iterator]() {
-    yield this.val;
+    if (this.isOk()) yield this.val;
   }
 
   /**

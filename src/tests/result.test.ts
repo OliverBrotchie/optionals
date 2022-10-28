@@ -44,8 +44,15 @@ Deno.test("Result", async (t) => {
     assertEquals(new Result("Ok")[Symbol.toStringTag], "Result");
   });
 
-  await t.step("Symbol.iterator - Should return correct value.", () => {
-    assertEquals([...new Result("Ok")], ["Ok"]);
+  await t.step(
+    "Symbol.iterator - Should return an array with one element.",
+    () => {
+      assertEquals([...new Result("Ok")], ["Ok"]);
+    }
+  );
+
+  await t.step("Symbol.iterator Err - Should return an empty array.", () => {
+    assertEquals([...new Result(new Error("Test"))], []);
   });
 
   await t.step("expect - Should get contained value.", () => {
