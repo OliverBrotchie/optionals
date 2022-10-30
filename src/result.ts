@@ -1,6 +1,8 @@
 // deno-lint-ignore-file no-prototype-builtins
 /* eslint-disable no-prototype-builtins */
 
+import { None, Option, Some } from "./option.ts";
+
 /**
  * A Rust-like Result class.
  *
@@ -231,6 +233,24 @@ export class Result<T, E extends Error> {
   }
 
   /**
+   * Converts from `Result<T, E>` to `Option<T>`.
+   *
+   * @returns {Option<T>}
+   *
+   * @example
+   * ```ts
+   * const option = Err("Some Error").ok(); // => None()
+   * ```
+   */
+  ok(): Option<T> {
+    if (this.isOk()) {
+      return Some(this.val as T);
+    }
+
+    return None();
+  }
+
+  /**
    * Returns contained value for use in matching.
    *
    * _Note: Please only use this to match against in `if` or `swtich` statments._
@@ -352,7 +372,7 @@ export class Result<T, E extends Error> {
  * }
  * ```
  */
-export function Ok<T, E extends Error>(input?: Exclude<T, E>) {
+export function Ok<T, E extends Error>(input?: T) {
   return new Result<T, E>(input as T);
 }
 

@@ -222,6 +222,17 @@ Deno.test("Result", async (t) => {
   await t.step("throw Ok - Should not throw an Error.", () => {
     new Result("Ok").throw();
   });
+
+  await t.step("ok - Should convert Ok to Some.", () => {
+    const res = new Result("Ok").ok();
+    assertEquals(res.unwrap(), "Ok");
+    assertEquals(res.isSome(), true);
+  });
+
+  await t.step("ok Error - Should convert Err to None.", () => {
+    const res = new Result<string, Error>(new Error("Test")).ok();
+    assert(res.isNone());
+  });
 });
 
 Deno.test("Result - Supporting Function Tests", async (t) => {

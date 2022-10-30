@@ -1,3 +1,5 @@
+import { Err, Ok, Result } from "./result.ts";
+
 /**
  * The primitive None value.
  *
@@ -168,6 +170,25 @@ export class Option<T> {
   }
 
   /**
+   * Transforms the `Option<T>` into a `Result<T, E>`, mapping Some to Ok and None to Err.
+   *
+   * @param {E} err An error to return if the Option is None.
+   * @returns {Result<T, E>}
+   *
+   * @example
+   * ```
+   * const result = Some(2).okOr("Error"); // => Ok(2)
+   * ```
+   */
+  okOr<E extends Error>(err: E | string): Result<T, E> {
+    if (this.isSome()) {
+      return Ok(this.val as T);
+    } else {
+      return Err(err);
+    }
+  }
+
+  /**
    * Returns contained value for use in matching.
    *
    * _Note: Please only use this to match against in `if` or `swtich` statments._
@@ -195,34 +216,38 @@ export class Option<T> {
   }
 
   /**
-   * Run a closure in a `try`/`catch` and convert it into an Option.
-   * If the function throws an Error, an Option containing None will be reutrned.
+   * Run a closure and convert it into an Option.
+   * If the function returns `null` or `undefined`, an Option containing None will be reutrned.
    *
    * _Note: Please use `fromAsync` to capture the result of asynchronous closures._
    * @param {Function} fn The closure to run.
    * @returns {Option<T>} The result of the closure.
    */
-  static from<T>(fn: () => T): Option<T> {
-    try {
-      return new Option<T>(fn());
-    } catch (_) {
+  static from<T>(fn: () => T | null | undefined): Option<T> {
+    const result = fn();
+    if (result === null || result === undefined) {
       return new Option<T>(none);
+    } else {
+      return new Option<T>(result);
     }
   }
 
   /**
-   * Run an asynchronous closure in a `try`/`catch` and convert it into an Option.
-   * If the function throws an Error, an Option containing None will be reutrned.
+   * Run an asynchronous closure and convert it into an Option.
+   * If the function returns `null` or `undefined`, an Option containing None will be reutrned.
    *
    * _Note: Please use `from` to capture the result of synchronous closures._
    * @param {Function} fn The closure to run.
    * @returns {Promise<Option<T>>} The result of the closure.
    */
-  static async fromAsync<T>(fn: () => Promise<T>): Promise<Option<T>> {
-    try {
-      return new Option<T>(await fn());
-    } catch (_) {
+  static async fromAsync<T>(
+    fn: () => Promise<T | null | undefined>
+  ): Promise<Option<T>> {
+    const result = await fn();
+    if (result === null || result === undefined) {
       return new Option<T>(none);
+    } else {
+      return new Option<T>(result);
     }
   }
 }
@@ -251,7 +276,7 @@ export class Option<T> {
  * }
  * ```
  */
-export function Some<T>(input: Exclude<T, typeof none>): Option<T> {
+export function Some<T>(input: T): Option<T> {
   return new Option<T>(input as T);
 }
 
