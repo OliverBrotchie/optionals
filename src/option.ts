@@ -1,14 +1,16 @@
+import { Err, Ok, Result } from "./result.ts";
+
 /**
  * The primitive None value.
  *
- * Note: To construct a None variant Option, please use `None()` instead.
+ * _Note: To construct a None variant Option, please use `None()` instead._
  */
 export const none = Symbol("None");
 
 /**
  * A Rust-like Option class.
  *
- * Note: Please use either `Some` or `None` to construct an Option.
+ * _Note: Please use either `Some` or `None` to construct an Option._
  *
  * @example
  * ```
@@ -26,7 +28,7 @@ export class Option<T> {
   /**
    * A constructor for an Option.
    *
-   * Note: Please use either `Some` or `None` to construct Options.
+   * _Note: Please use either `Some` or `None` to construct Options._
    *
    * @param {T | typeof none} input The value to wrap in an Option.
    */
@@ -35,8 +37,24 @@ export class Option<T> {
   }
 
   /**
-   * Returns true if contained value isnt None.
+   * Converts Option into a String for display purposes.
+   */
+  get [Symbol.toStringTag]() {
+    return `Option`;
+  }
+
+  /**
+   * Iterator support for Option.
    *
+   * _Note: This method will only yeild if the Option is Some._
+   * @returns {IterableIterator<T>}
+   */
+  *[Symbol.iterator]() {
+    if (this.isSome()) yield this.val;
+  }
+
+  /**
+   * Returns true if contained value isnt None.
    * @returns {boolean}
    */
   isSome(): boolean {
@@ -152,9 +170,28 @@ export class Option<T> {
   }
 
   /**
+   * Transforms the `Option<T>` into a `Result<T, E>`, mapping Some to Ok and None to Err.
+   *
+   * @param {E} err An error to return if the Option is None.
+   * @returns {Result<T, E>}
+   *
+   * @example
+   * ```
+   * const result = Some(2).okOr("Error"); // => Ok(2)
+   * ```
+   */
+  okOr<E extends Error>(err: E | string): Result<T, E> {
+    if (this.isSome()) {
+      return Ok(this.val as T);
+    } else {
+      return Err(err);
+    }
+  }
+
+  /**
    * Returns contained value for use in matching.
    *
-   * Note: Please only use this to match against in `if` or `swtich` statments.
+   * _Note: Please only use this to match against in `if` or `swtich` statments._
    *
    * @returns {T | typeof none}
    * @example
@@ -179,17 +216,38 @@ export class Option<T> {
   }
 
   /**
-   * Run a closure in a `try`/`catch` and convert it into an Option.
-   * If the function throws an Error, an Option containing None will be reutrned.
+   * Run a closure and convert it into an Option.
+   * If the function returns `null` or `undefined`, an Option containing None will be reutrned.
    *
+   * _Note: Please use `fromAsync` to capture the result of asynchronous closures._
+   * @param {Function} fn The closure to run.
+   * @returns {Option<T>} The result of the closure.
+   */
+  static from<T>(fn: () => T | null | undefined): Option<T> {
+    const result = fn();
+    if (result === null || result === undefined) {
+      return new Option<T>(none);
+    } else {
+      return new Option<T>(result);
+    }
+  }
+
+  /**
+   * Run an asynchronous closure and convert it into an Option.
+   * If the function returns `null` or `undefined`, an Option containing None will be reutrned.
+   *
+   * _Note: Please use `from` to capture the result of synchronous closures._
    * @param {Function} fn The closure to run.
    * @returns {Promise<Option<T>>} The result of the closure.
    */
-  static async from<T>(fn: (() => T) | (() => Promise<T>)): Promise<Option<T>> {
-    try {
-      return new Option<T>(await fn());
-    } catch (_) {
+  static async fromAsync<T>(
+    fn: () => Promise<T | null | undefined>
+  ): Promise<Option<T>> {
+    const result = await fn();
+    if (result === null || result === undefined) {
       return new Option<T>(none);
+    } else {
+      return new Option<T>(result);
     }
   }
 }
@@ -208,10 +266,26 @@ export class Option<T> {
  * }
  *
  * ```
+ *
+ * @example
+ * ```ts
+ * const foo = Some("Value");
+ *
+ * if (foo instanceof Some) {
+ *  // Do something
+ * }
+ * ```
  */
-export function Some<T>(input: Exclude<T, typeof none>) {
+export function Some<T>(input: T): Option<T> {
   return new Option<T>(input as T);
 }
+
+Object.defineProperty(Some, Symbol.hasInstance, {
+  value: <T>(instance: Option<T>): boolean => {
+    if (typeof instance !== "object") return false;
+    return instance?.isSome() || false;
+  },
+});
 
 /**
  * Construct the None variant of Option.
@@ -225,7 +299,22 @@ export function Some<T>(input: Exclude<T, typeof none>) {
  *   return Some(left / right);
  * }
  * ```
+ * @example
+ * ```ts
+ * const foo = None();
+ *
+ * if (foo instanceof None) {
+ *  // Do something
+ * }
+ * ```
  */
 export function None<T>(): Option<T> {
   return new Option<T>(none);
 }
+
+Object.defineProperty(None, Symbol.hasInstance, {
+  value: <T>(instance: Option<T>): boolean => {
+    if (typeof instance !== "object") return false;
+    return instance?.isNone() || false;
+  },
+});

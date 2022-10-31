@@ -14,10 +14,25 @@ Deno.test("Option", async (t) => {
     assert(new Option(symbol).isSome());
   });
 
-  await t.step("isErr - Should correctly identify a None value.", () => {
+  await t.step("isNone - Should correctly identify a None value.", () => {
     assert(!new Option("Some").isNone());
     assert(new Option(none).isNone());
     assert(!new Option(symbol).isNone());
+  });
+
+  await t.step("Symbol.toStringTag - Should return correct value.", () => {
+    assertEquals(new Option("Some")[Symbol.toStringTag], "Option");
+  });
+
+  await t.step(
+    "Symbol.iterator - Should return an array with one element.",
+    () => {
+      assertEquals([...new Option("Ok")], ["Ok"]);
+    }
+  );
+
+  await t.step("Symbol.iterator None - Should return an empty array.", () => {
+    assertEquals([...new Option(none)], []);
   });
 
   await t.step("expect - Should get contained value.", () => {
@@ -109,6 +124,18 @@ Deno.test("Option", async (t) => {
     const res = new Option<string>(none).or(new Option("Ok"));
     assertEquals(res.peek(), "Ok");
   });
+
+  await t.step("okOr - Should convert Some to Ok.", () => {
+    const res = new Option("Ok").okOr("Test");
+    assertEquals(res.unwrap(), "Ok");
+    assertEquals(res.isOk(), true);
+  });
+
+  await t.step("okOr None - Should convert None to Err.", () => {
+    const res = new Option<string>(none).okOr("Err");
+    assertEquals(res.unwrapErr(), new Error("Err"));
+    assertEquals(res.isErr(), true);
+  });
 });
 
 Deno.test("Result - Supporting Function Tests", async (t) => {
@@ -118,21 +145,58 @@ Deno.test("Result - Supporting Function Tests", async (t) => {
     assertEquals(res.peek(), "Test");
   });
 
+  await t.step("Some instanceof - Should return true.", () => {
+    const res = Some("Test");
+    assert(res instanceof Some);
+  });
+
   await t.step("None - Should return None result.", () => {
     const res = None();
     assertEquals(res.isNone(), true);
   });
 
-  await t.step("from - Should return Ok result.", async () => {
-    const res = await Option.from(() => "Test");
+  await t.step("None instanceof - Should return true.", () => {
+    const res = None();
+    assert(res instanceof None);
+  });
+
+  await t.step("from - Should return Ok result.", () => {
+    const res = Option.from(() => "Test");
     assert(res.isSome());
     assertEquals(res.peek(), "Test");
   });
 
-  await t.step("from Error - Should return None result.", async () => {
-    const res = await Option.from(() => {
-      throw new Error("Test");
+  await t.step("from Null - Should return None result.", () => {
+    const res = Option.from(() => {
+      return null;
     });
+    assert(res.isNone());
+  });
+
+  await t.step("from Undefined - Should return None result.", () => {
+    const res = Option.from(() => {
+      return undefined;
+    });
+    assert(res.isNone());
+  });
+
+  await t.step("fromAsync - Should return Ok result.", async () => {
+    const res = await Option.fromAsync(
+      async () => await Promise.resolve("Test")
+    );
+    assert(res.isSome());
+    assertEquals(res.peek(), "Test");
+  });
+
+  await t.step("fromAsync Null - Should return None result.", async () => {
+    const res = await Option.fromAsync(async () => await Promise.resolve(null));
+    assert(res.isNone());
+  });
+
+  await t.step("fromAsync Undefined - Should return None result.", async () => {
+    const res = await Option.fromAsync(
+      async () => await Promise.resolve(undefined)
+    );
     assert(res.isNone());
   });
 });
