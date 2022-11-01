@@ -38,7 +38,7 @@ const scriptName = basename(import.meta.url, ".ts");
 const logTag = `[${scriptName}]`;
 const packageFile = `./scripts/${scriptName}.json`;
 const packageText = await Deno.readTextFile(packageFile);
-const packageJSON = <BuildOptions["package"]> JSON.parse(packageText);
+const packageJSON = <BuildOptions["package"]>JSON.parse(packageText);
 const { version } = packageJSON;
 const args = parse(Deno.args, {
   string: ["cp", "release"],
@@ -47,7 +47,7 @@ const args = parse(Deno.args, {
     release: "",
   },
 });
-const release = <ReleaseType> args.release;
+const release = <ReleaseType>args.release;
 packageJSON.version = versionHandler(version, release);
 
 await build({
@@ -68,11 +68,11 @@ for (const filepath of args.cp.split(/,/g)) {
 
 if (packageJSON.version === version) {
   console.log(
-    `${logTag} Version did not change; nothing to deploy. ${packageJSON.name} v${version}`,
+    `${logTag} Version did not change; nothing to deploy. ${packageJSON.name} v${version}`
   );
 } else {
   await Deno.writeTextFile(packageFile, JSON.stringify(packageJSON, null, 2));
   console.log(
-    `${logTag} ${packageJSON.name} v${packageJSON.version} ready to deploy!`,
+    `${logTag} ${packageJSON.name} v${packageJSON.version} ready to deploy!`
   );
 }

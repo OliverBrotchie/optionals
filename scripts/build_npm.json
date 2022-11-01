@@ -1,18 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "rust-optionals",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "Rust-like error handling and options for TypeScript, Node, and Deno!",
   "keywords": [
     "rust",
-    "some",
-    "none",
+    "error-handling",
     "option",
     "result",
-    "ok",
-    "err",
-    "optionals",
-    "error"
+    "optionals"
   ],
   "homepage": "https://github.com/OliverBrotchie/optionals#readme",
   "bugs": "https://github.com/OliverBrotchie/optionals/issues",
