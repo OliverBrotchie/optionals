@@ -2,7 +2,7 @@
 
   <h1><code>Optionals</code></h1>
 
-<strong>Rust-like error handling and options for TypeScript and Deno!</strong>
+<strong>Rust-like error handling and options for TypeScript, Node and Deno!</strong>
 
 </div>
 
