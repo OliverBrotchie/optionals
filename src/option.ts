@@ -216,6 +216,17 @@ export class Option<T> {
   }
 
   /**
+   * Converts from Option<Option<T> to Option<T>
+   * @returns Option<T>
+   */
+  flatten(): Option<T> {
+    if (this.val instanceof Option) {
+      return this.val
+    }
+    return this
+  }
+
+  /**
    * Run a closure and convert it into an Option.
    * If the function returns `null` or `undefined`, an Option containing None will be reutrned.
    *

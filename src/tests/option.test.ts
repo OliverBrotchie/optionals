@@ -136,6 +136,11 @@ Deno.test("Option", async (t) => {
     assertEquals(res.unwrapErr(), new Error("Err"));
     assertEquals(res.isErr(), true);
   });
+
+  await t.step("flatten - Should converts from Option<Option<T>> to Option<T>", () => {
+    const res = new Option<Option<string>>(new Option<string>('test'))
+    assertEquals(res.flatten(), new Option('test'))
+  })
 });
 
 Deno.test("Result - Supporting Function Tests", async (t) => {

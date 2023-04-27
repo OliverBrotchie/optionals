@@ -233,6 +233,11 @@ Deno.test("Result", async (t) => {
     const res = new Result<string, Error>(new Error("Test")).ok();
     assert(res.isNone());
   });
+
+  await t.step('flatten - Should converts from Result<Result<T, E>, E> to Result<T, E>', () => {
+    const res = new Result<Result<string, Error>, Error>(new Result<string, Error>('test'))
+    assert(res.flatten(), new Result('test'))
+  })
 });
 
 Deno.test("Result - Supporting Function Tests", async (t) => {
