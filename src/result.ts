@@ -287,6 +287,17 @@ export class Result<T, E extends Error> {
   }
 
   /**
+   * Converts from Result<Result<T, E>, E> to Result<T, E>
+   * @returns Option<T>
+   */
+  flatten(): Result<T, E> {
+    if (this.val instanceof Result) {
+      return this.val
+    }
+    return this
+  }
+
+  /**
    * Run a closure in a `try`/`catch` and convert it into a Result.
    *
    * _Note: Please use `fromAsync` to capture the Result of asynchronous closures._
