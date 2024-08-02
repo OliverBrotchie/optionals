@@ -18,7 +18,7 @@ This module provides a minimal, fast and simple way to create expressive functio
 
 ```ts
 // Result
-import { Result, Ok, Err } from "https://deno.land/x/optionals@v2.0.2`/mod.ts";
+import { Result, Ok, Err } from "https://deno.land/x/optionals@v2.0.2/mod.ts";
 
 // Option
 import {
