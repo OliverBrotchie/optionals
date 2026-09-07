@@ -11,7 +11,7 @@ import {
   build,
   BuildOptions,
   emptyDir,
-} from "https://deno.land/x/dnt@0.31.0/mod.ts";
+} from "jsr:@deno/dnt@0.43.2";
 
 await emptyDir("./npm");
 
@@ -53,6 +53,7 @@ packageJSON.version = versionHandler(version, release);
 await build({
   entryPoints: ["./mod.ts"],
   outDir: "./npm",
+  test: false,
   shims: {
     deno: true,
   },

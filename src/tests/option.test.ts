@@ -1,9 +1,5 @@
 import { Option, Some, None, none } from "../option.ts";
-import {
-  assertEquals,
-  assert,
-  fail,
-} from "https://deno.land/std@0.159.0/testing/asserts.ts";
+import { assertEquals, assert, fail } from "./asserts.ts";
 
 const symbol = Symbol("Fake None");
 
@@ -137,17 +133,29 @@ Deno.test("Option", async (t) => {
     assertEquals(res.isErr(), true);
   });
 
-  await t.step("flatten - Should converts from Option<Option<T>> to Option<T>", () => {
-    const res = new Option<Option<string>>(new Option<string>('test'))
-    assertEquals(res.flatten(), new Option('test'))
-  })
+  await t.step("flatten - Should convert Option<Option<T>> to Option<T>", () => {
+    const res = new Option<Option<string>>(new Option<string>("test"));
+    assertEquals(res.flatten().peek(), "test");
+  });
+
+  await t.step("inspect - Should call fn with contained value.", () => {
+    let seen: string | undefined;
+    const res = new Option("Ok").inspect((v) => (seen = v));
+    assertEquals(seen, "Ok");
+    assertEquals(res.peek(), "Ok");
+  });
+
+  await t.step("inspect None - Should not call fn.", () => {
+    let called = false;
+    new Option<string>(none).inspect(() => (called = true));
+    assert(!called);
+  });
 });
 
 Deno.test("Result - Supporting Function Tests", async (t) => {
   await t.step("Some - Should return Some result.", () => {
     const res = Some("Test");
     assertEquals(res.isSome(), true);
-    assertEquals(res.peek(), "Test");
   });
 
   await t.step("Some instanceof - Should return true.", () => {
@@ -166,22 +174,18 @@ Deno.test("Result - Supporting Function Tests", async (t) => {
   });
 
   await t.step("from - Should return Ok result.", () => {
-    const res = Option.from(() => "Test");
+    const res = Option.from("Test");
     assert(res.isSome());
     assertEquals(res.peek(), "Test");
   });
 
   await t.step("from Null - Should return None result.", () => {
-    const res = Option.from(() => {
-      return null;
-    });
+    const res = Option.from(null);
     assert(res.isNone());
   });
 
   await t.step("from Undefined - Should return None result.", () => {
-    const res = Option.from(() => {
-      return undefined;
-    });
+    const res = Option.from(undefined);
     assert(res.isNone());
   });
 

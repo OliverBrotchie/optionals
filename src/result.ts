@@ -1,7 +1,25 @@
-// deno-lint-ignore-file no-prototype-builtins
-/* eslint-disable no-prototype-builtins */
-
 import { None, Option, Some } from "./option.ts";
+
+/**
+ * Determine whether a value is an `Error` (including cross-realm and
+ * custom error types that extend `Error` but are not `instanceof` it).
+ */
+function isError(value: unknown): value is Error {
+  return value instanceof Error ||
+    (!!value && typeof value === "object" && Error.isPrototypeOf(value));
+}
+
+/**
+ * Wraps a class so it is callable and constructable, with `instanceof`
+ * working for both forms.
+ */
+function callable<
+  C extends new (...args: any[]) => any,
+>(Ctor: C): C & ((...args: ConstructorParameters<C>) => InstanceType<C>) {
+  return new Proxy(Ctor, {
+    apply: (_target, _thisArg, args) => Reflect.construct(Ctor, args),
+  }) as C & ((...args: ConstructorParameters<C>) => InstanceType<C>);
+}
 
 /**
  * A Rust-like Result class.
@@ -55,12 +73,7 @@ export class Result<T, E extends Error> {
    * @returns {boolean}
    */
   isOk(): boolean {
-    return !(
-      this.val instanceof Error ||
-      (this.val &&
-        typeof this.val === "object" &&
-        Error.isPrototypeOf(this.val))
-    );
+    return !isError(this.val);
   }
 
   /**
@@ -69,12 +82,7 @@ export class Result<T, E extends Error> {
    * @returns {boolean}
    */
   isErr(): boolean {
-    return (
-      this.val instanceof Error ||
-      (this.val &&
-        typeof this.val === "object" &&
-        Error.isPrototypeOf(this.val))
-    );
+    return isError(this.val);
   }
 
   private formatError(err: Error) {
@@ -319,11 +327,13 @@ export class Result<T, E extends Error> {
    * @param {Function} fn The synchronous closure to run
    * @returns {Promise<Result<T, Error>>} The Result of the closure
    */
-  static async fromAsync<T>(fn: () => Promise<T>): Promise<Result<T, Error>> {
+  static async fromAsync<T>(
+    fn: () => Promise<T>
+  ): Promise<Result<Awaited<T>, Error>> {
     try {
-      return new Result<T, Error>(await fn());
+      return new Result<Awaited<T>, Error>(await fn());
     } catch (e: unknown) {
-      return new Result<T, Error>(e as Error);
+      return new Result<Awaited<T>, Error>(e as Error);
     }
   }
 
@@ -345,89 +355,73 @@ export class Result<T, E extends Error> {
     input: Array<Result<T, E>>
   ): { ok: Array<T>; err: Array<E> } {
     return input.reduce(
-      (acc: { ok: Array<T>; err: Array<E> }, e) => {
+      (acc, e) => {
         if (e.isOk()) acc.ok.push(e.unwrap());
         else acc.err.push(e.unwrapErr());
 
         return acc;
       },
-      {
-        ok: [],
-        err: [],
-      }
+      { ok: [] as T[], err: [] as E[] } satisfies { ok: T[]; err: E[] }
     );
   }
 }
 
+class OkClass<T, E extends Error> extends Result<T, E> {
+  constructor(input: T) {
+    super(input);
+  }
+
+  override get [Symbol.toStringTag]() {
+    return `Ok`;
+  }
+}
+
+class ErrClass<T, E extends Error> extends Result<T, E> {
+  constructor(input: E) {
+    super(input);
+  }
+
+  override get [Symbol.toStringTag]() {
+    return `Err`;
+  }
+}
+
+/** The `Ok` variant type. */
+export type Ok<T, E extends Error = Error> = OkClass<T, E>;
+/** The `Err` variant type. */
+export type Err<T, E extends Error = Error> = ErrClass<T, E>;
+
 /**
  * Return a non-error value result.
  *
- * @param {Exclude<T, E>} input a value that does not extend the `Error` type.
- * @returns {Result<T, E>}
- * @example
- * ```ts
- * function divide(left: number, right: number): Result<number, Error> {
- *   if (right === 0) return Err("Divided by zero");
- *
- *   return Ok(left / right);
- * }
- *
- * ```
- *
- * @example
- * ```ts
- * const foo = Ok("Foo!");
- *
- * if (foo instanceof Ok) {
- *  // Do something
- * }
- * ```
+ * Values may be constructed with either `Ok(value)` or `new Ok(value)`.
  */
-export function Ok<T, E extends Error>(input?: T) {
-  return new Result<T, E>(input as T);
-}
-
-Object.defineProperty(Ok, Symbol.hasInstance, {
-  value: <T, E extends Error>(instance: Result<T, E>): boolean => {
-    if (typeof instance !== "object") return false;
-    return instance?.isOk() || false;
-  },
-});
+export const Ok: {
+  <T, E extends Error>(input?: T): Ok<T, E>;
+  new <T, E extends Error>(input?: T): Ok<T, E>;
+} = new Proxy(OkClass, {
+  apply: (_target, _thisArg, args) => Reflect.construct(_target, args),
+}) as unknown as {
+  <T, E extends Error>(input?: T): Ok<T, E>;
+  new <T, E extends Error>(input?: T): Ok<T, E>;
+};
 
 /**
- * Return a error result.
+ * Return an error result.
  *
- * @param {E | string} input a value that extends the `Error` type.
- * @returns {Result<T, E>}
- * @example
- * ```ts
- * function divide(left: number, right: number): Result<number, Error> {
- *   if (right === 0) return Err("Divided by zero");
- *
- *   return Ok(left / right);
- * }
- *
- * ```
- *
- * @example
- * ```ts
- * const foo = Err(new Error("Foo!"));
- *
- * if (foo instanceof Err) {
- *  // Do something
- * }
- * ```
+ * Accepts an `Error` or a `string` (coerced to an `Error`).
+ * Values may be constructed with either `Err(error)` or `new Err(error)`.
  */
-export function Err<T, E extends Error>(input: E | string): Result<T, E> {
-  if (typeof input === "string") {
-    return new Result<T, Error>(new Error(input)) as Result<T, E>;
-  }
-  return new Result<T, E>(input);
-}
-
-Object.defineProperty(Err, Symbol.hasInstance, {
-  value: <T, E extends Error>(instance: Result<T, E>): boolean => {
-    if (typeof instance !== "object") return false;
-    return instance?.isErr() || false;
-  },
-});
+export const Err: {
+  <T, E extends Error>(input: E | string): Err<T, E>;
+  new <T, E extends Error>(input: E): Err<T, E>;
+} = new Proxy(ErrClass, {
+  apply: (_target, _thisArg, args: [unknown]) =>
+    (typeof args[0] === "string"
+      ? new ErrClass<unknown, Error>(new Error(args[0]))
+      : new ErrClass<unknown, Error>(args[0] as Error)),
+  construct: (_target, args: [unknown]) => Reflect.construct(ErrClass, args),
+}) as unknown as {
+  <T, E extends Error>(input: E | string): Err<T, E>;
+  new <T, E extends Error>(input: E): Err<T, E>;
+};

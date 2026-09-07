@@ -170,6 +170,20 @@ export class Option<T> {
   }
 
   /**
+   * Calls `fn` with the contained Some value, returning the Option unchanged.
+   * Does nothing if the Option is None.
+   *
+   * @param {Function} fn A side-effect function to run on the contained value.
+   * @returns {Option<T>}
+   */
+  inspect(fn: (input: T) => void): Option<T> {
+    if (this.isSome()) {
+      fn(this.val as T);
+    }
+    return this;
+  }
+
+  /**
    * Transforms the `Option<T>` into a `Result<T, E>`, mapping Some to Ok and None to Err.
    *
    * @param {E} err An error to return if the Option is None.
@@ -216,31 +230,34 @@ export class Option<T> {
   }
 
   /**
-   * Converts from Option<Option<T> to Option<T>
-   * @returns Option<T>
+   * Converts `Option<Option<T>>` into `Option<T>`, removing one level of
+   * nesting. Returns `this` unchanged if the Option is `None`.
+   *
+   * @returns {Option<T>} The flattened Option.
    */
   flatten(): Option<T> {
     if (this.val instanceof Option) {
-      return this.val
+      return this.val as Option<T>;
     }
-    return this
+    return this;
   }
 
   /**
-   * Run a closure and convert it into an Option.
-   * If the function returns `null` or `undefined`, an Option containing None will be reutrned.
+   * Converts a `null` or `undefined` value into an Option, mapping to None.
    *
-   * _Note: Please use `fromAsync` to capture the result of asynchronous closures._
-   * @param {Function} fn The closure to run.
-   * @returns {Option<T>} The result of the closure.
+   * @param {T | null | undefined} value The value to wrap.
+   * @returns {Option<T>} The wrapped value.
+   *
+   * @example
+   * ```ts
+   * const found = Option.from(array.find(4)); // Some or None
+   * ```
    */
-  static from<T>(fn: () => T | null | undefined): Option<T> {
-    const result = fn();
-    if (result === null || result === undefined) {
+  static from<T>(value: T | null | undefined): Option<T> {
+    if (value === null || value === undefined) {
       return new Option<T>(none);
-    } else {
-      return new Option<T>(result);
     }
+    return new Option<T>(value);
   }
 
   /**
@@ -253,79 +270,63 @@ export class Option<T> {
    */
   static async fromAsync<T>(
     fn: () => Promise<T | null | undefined>
-  ): Promise<Option<T>> {
-    const result = await fn();
-    if (result === null || result === undefined) {
-      return new Option<T>(none);
-    } else {
-      return new Option<T>(result);
-    }
+  ): Promise<Option<Awaited<T>>> {
+    return Option.from<Awaited<T>>(await fn() as Awaited<T> | null | undefined);
   }
 }
 
-/**
- * Construct an Option from a value other than None.
- *
- * @param {Exclude<T, typeof none>} input a value that isnt None.
- * @returns {Option<T>}
- * @example
- * ```ts
- * function divide(left: number, right: number): Option<number> {
- *   if (right === 0) return None();
- *
- *   return Some(left / right);
- * }
- *
- * ```
- *
- * @example
- * ```ts
- * const foo = Some("Value");
- *
- * if (foo instanceof Some) {
- *  // Do something
- * }
- * ```
- */
-export function Some<T>(input: T): Option<T> {
-  return new Option<T>(input as T);
+class SomeClass<T> extends Option<T> {
+  constructor(input: T) {
+    super(input);
+  }
+
+  override get [Symbol.toStringTag]() {
+    return `Some`;
+  }
 }
 
-Object.defineProperty(Some, Symbol.hasInstance, {
-  value: <T>(instance: Option<T>): boolean => {
-    if (typeof instance !== "object") return false;
-    return instance?.isSome() || false;
-  },
-});
+class NoneClass<T> extends Option<T> {
+  constructor() {
+    super(none);
+  }
 
-/**
- * Construct the None variant of Option.
- *
- * @returns {Option<T>}
- * @example
- * ```ts
- *  function divide(left: number, right: number): Option<number> {
- *   if (right === 0) return None();
- *
- *   return Some(left / right);
- * }
- * ```
- * @example
- * ```ts
- * const foo = None();
- *
- * if (foo instanceof None) {
- *  // Do something
- * }
- * ```
- */
-export function None<T>(): Option<T> {
-  return new Option<T>(none);
+  override get [Symbol.toStringTag]() {
+    return `None`;
+  }
 }
 
-Object.defineProperty(None, Symbol.hasInstance, {
-  value: <T>(instance: Option<T>): boolean => {
-    if (typeof instance !== "object") return false;
-    return instance?.isNone() || false;
-  },
-});
+/** The `Some` variant type. */
+export type Some<T> = SomeClass<T>;
+/** The `None` variant type. */
+export type None<T> = NoneClass<T>;
+
+/**
+ * The `Some` variant of `Option`, holding a value.
+ *
+ * Values may be constructed with either `Some(42)` or `new Some(42)`.
+ */
+export const Some: {
+  <T>(input: T): Some<T>;
+  new <T>(input: T): Some<T>;
+} = new Proxy(SomeClass, {
+  apply: (_target, _thisArg, args: [unknown]) =>
+    Reflect.construct(_target, args),
+}) as unknown as {
+  <T>(input: T): Some<T>;
+  new <T>(input: T): Some<T>;
+};
+
+/**
+ * The `None` variant of `Option`.
+ *
+ * Values may be constructed with either `None()` or `new None()`.
+ */
+export const None: {
+  <T>(): None<T>;
+  new <T>(): None<T>;
+} = new Proxy(NoneClass, {
+  apply: (_target, _thisArg) => Reflect.construct(_target, []),
+}) as unknown as {
+  <T>(): None<T>;
+  new <T>(): None<T>;
+};

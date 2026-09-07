@@ -1,12 +1,8 @@
 import { Result, Ok, Err } from "../result.ts";
-import {
-  assertEquals,
-  assert,
-  fail,
-} from "https://deno.land/std@0.159.0/testing/asserts.ts";
+import { assertEquals, assert, fail } from "./asserts.ts";
 
 class TestError extends Error {
-  name = "TestError";
+  override name = "TestError";
 }
 
 class ErrorLookAlike {
@@ -234,10 +230,10 @@ Deno.test("Result", async (t) => {
     assert(res.isNone());
   });
 
-  await t.step('flatten - Should converts from Result<Result<T, E>, E> to Result<T, E>', () => {
-    const res = new Result<Result<string, Error>, Error>(new Result<string, Error>('test'))
-    assert(res.flatten(), new Result('test'))
-  })
+  await t.step("flatten - Should convert Result<Result<T, E>, E> to Result<T, E>", () => {
+    const res = new Result<Result<string, Error>, Error>(new Result<string, Error>("test"));
+    assertEquals(res.flatten().unwrap(), "test");
+  });
 });
 
 Deno.test("Result - Supporting Function Tests", async (t) => {
