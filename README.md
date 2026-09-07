@@ -10,7 +10,7 @@
 
 Remove `null` and `undefined` from your projects with the safety of Rust's
 `Option` and `Result` enums. Full pattern matching, exhaustive handling, and
-`instanceof` guards, with zero runtime dependencies. Runs on <a href="#bun">Bun</a> (primary), <a href="#deno">Deno</a>, and <a href="#node">Node</a>.</p>
+`instanceof` guards, with zero runtime dependencies. Runs on <a href="#bun">Bun</a>, <a href="#deno">Deno</a>, and <a href="#node">Node</a>.</p>
 
 ## Why?
 
