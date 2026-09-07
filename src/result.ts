@@ -295,14 +295,16 @@ export class Result<T, E extends Error> {
   }
 
   /**
-   * Converts from Result<Result<T, E>, E> to Result<T, E>
-   * @returns Option<T>
+   * Converts `Result<Result<U, E>, E>` into `Result<U, E>`, removing one
+   * level of nesting. Returns `this` unchanged if the Result is `Err`.
+   *
+   * @returns {Result<U, E>} The flattened Result.
    */
-  flatten(): Result<T, E> {
+  flatten<U, F extends Error>(this: Result<Result<U, F>, F>): Result<U, F> {
     if (this.val instanceof Result) {
-      return this.val
+      return this.val;
     }
-    return this
+    return this as unknown as Result<U, F>;
   }
 
   /**

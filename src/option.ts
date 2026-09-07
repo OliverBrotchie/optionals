@@ -230,16 +230,16 @@ export class Option<T> {
   }
 
   /**
-   * Converts `Option<Option<T>>` into `Option<T>`, removing one level of
+   * Converts `Option<Option<U>>` into `Option<U>`, removing one level of
    * nesting. Returns `this` unchanged if the Option is `None`.
    *
-   * @returns {Option<T>} The flattened Option.
+   * @returns {Option<U>} The flattened Option.
    */
-  flatten(): Option<T> {
+  flatten<U>(this: Option<Option<U>>): Option<U> {
     if (this.val instanceof Option) {
-      return this.val as Option<T>;
+      return this.val as Option<U>;
     }
-    return this;
+    return this as unknown as Option<U>;
   }
 
   /**
