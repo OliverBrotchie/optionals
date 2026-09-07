@@ -53,7 +53,7 @@ export class Result<T, E extends Error> {
   /**
    * Converts Result into a String for display purposes.
    */
-  get [Symbol.toStringTag]() {
+  get [Symbol.toStringTag](): string {
     return `Result`;
   }
 
@@ -63,7 +63,7 @@ export class Result<T, E extends Error> {
    * _Note: This method will only yeild if the Result is Ok._
    * @returns {IterableIterator<T>}
    */
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Generator<T | E> {
     if (this.isOk()) yield this.val;
   }
 
@@ -373,7 +373,7 @@ class OkClass<T, E extends Error> extends Result<T, E> {
     super(input);
   }
 
-  override get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag](): string {
     return `Ok`;
   }
 }
@@ -383,7 +383,7 @@ class ErrClass<T, E extends Error> extends Result<T, E> {
     super(input);
   }
 
-  override get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag](): string {
     return `Err`;
   }
 }

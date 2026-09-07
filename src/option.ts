@@ -39,7 +39,7 @@ export class Option<T> {
   /**
    * Converts Option into a String for display purposes.
    */
-  get [Symbol.toStringTag]() {
+  get [Symbol.toStringTag](): string {
     return `Option`;
   }
 
@@ -49,7 +49,7 @@ export class Option<T> {
    * _Note: This method will only yeild if the Option is Some._
    * @returns {IterableIterator<T>}
    */
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Generator<T | typeof none> {
     if (this.isSome()) yield this.val;
   }
 
@@ -280,7 +280,7 @@ class SomeClass<T> extends Option<T> {
     super(input);
   }
 
-  override get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag](): string {
     return `Some`;
   }
 }
@@ -290,7 +290,7 @@ class NoneClass<T> extends Option<T> {
     super(none);
   }
 
-  override get [Symbol.toStringTag]() {
+  override get [Symbol.toStringTag](): string {
     return `None`;
   }
 }

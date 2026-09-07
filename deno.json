@@ -1,4 +1,15 @@
 {
+  "name": "@oliverbrotchie/optionals",
+  "version": "4.0.1",
+  "exports": "./mod.ts",
+  "exclude": [
+    ".vscode",
+    "bunfig.toml",
+    "deno.lock",
+    "scripts",
+    "src/tests",
+    "test"
+  ],
   "tasks": {
     "test": "deno test --coverage=coverage",
     "lcov": "deno coverage coverage --lcov --output=coverage/report.lcov",
